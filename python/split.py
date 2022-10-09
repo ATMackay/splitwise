@@ -1,10 +1,8 @@
 from collections import defaultdict
 from array import *
-import pandas as pd
 import numpy as np
 import math
-import csv
-import datetime
+import time
 """
 This programme takes an input file containing trading data, calculates the implied volatility for each 
 trade and ouputs a new csv file.
@@ -23,26 +21,35 @@ Class containing minimum transaction algorithm and csv decoding
 """
 class Solution: 
 
-    def __init__(self, input_csv):      
-        self.input_csv = input_csv
-        self.data = np.loadtxt(self.input_csv, dtype=int)
+    def __init__(self):      
+        # do nothing
+        return
 
+    def load(self, input_csv):
+        return np.genfromtxt(input_csv, delimiter=',')
 
+    def min_transfers(self, transactions) -> int:
 
-    def min_transfers(self) -> int:
-        score = defaultdict(int)
+        scores = defaultdict(int)
 
-        for f, t, a in self.data:
-            score[f] -= a
-            score[t] += a
+        for f, t, a in transactions:
+            scores[f] -= a
+            scores[t] += a
         
-        positives = [v for v in score.values() if v > 0]
-        negatives = [v for v in score.values() if v < 0]
+        positives = [v for v in scores.values() if v > 0]
+        negatives = [v for v in scores.values() if v < 0]
+
+
+        print(f"scores: {scores}")
+        print(f"positives {positives}")
+        print(f"negatives {negatives}")
 
         def recurse(positives, negatives):
             if len(positives) + len(negatives) == 0: return 0
 
             negative = negatives[0]
+
+            #print(f"negative[0] {negative}")
 
             count = math.inf
             for positive in positives:
@@ -66,10 +73,22 @@ class Solution:
 
         return recurse(positives, negatives)
 
-def main():
-    m = Solution("input.csv").min_transfers()
-    print ("minimum transfers were", m)
 
 
 if __name__ == "__main__":
-    main()
+    print("splitwise algorithm in python")
+
+    # instantiate class instance
+    solution_instance = Solution
+
+    # Measure csv load time
+    start = time.perf_counter_ns()
+    data = solution_instance().load("../test_data/input.csv")
+    print(f"completed csv load execution in {(time.perf_counter_ns() - start)/1000} microseconds")
+
+    # Measure algorithm time
+    min_transfer_start = time.perf_counter_ns()
+    m = solution_instance().min_transfers(data)
+    print(f"completed min_transfer execution in {(time.perf_counter_ns() -  min_transfer_start)/1000} microseconds")
+
+    print("minimum transfers were", m)
