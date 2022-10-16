@@ -30,11 +30,7 @@ class Solution:
 
     def min_transfers(self, transactions) -> int:
 
-        scores = defaultdict(int)
-
-        for f, t, a in transactions:
-            scores[f] -= a
-            scores[t] += a
+        scores = scores(transactions)
         
         positives = [v for v in scores.values() if v > 0]
         negatives = [v for v in scores.values() if v < 0]
@@ -71,10 +67,77 @@ class Solution:
 
         return recurse(positives, negatives)
 
-    def greedy(self):
-        # TODO
-        return
+    def simplifyDebts(self, transactions):
+        scores = scores(transactions)
 
+        debts = np.ndarray()
+        def greedy(scores, debt_array):
+            if len(scores) == 0:
+                return debt_array
+            
+            """
+            maxCreditor, maxCredit = maxEntry(scores)
+
+	        maxDebtor, maxDebt = minEntry(scores)
+
+            if maxCredit == -maxDebt:
+                debts = append(existingDebts, [3]int64{maxDebtor, maxCreditor, -maxDebt})
+                delete(scores, maxDebtor)
+                delete(scores, maxCreditor)
+            elif maxCredit > -maxDebt:
+                debts = append(existingDebts, [3]int64{maxDebtor, maxCreditor, -maxDebt})
+                delete(scores, maxDebtor)
+                scores[maxCreditor] += maxDebt
+            elif maxCredit < -maxDebt:
+                debts = append(existingDebts, [3]int64{maxDebtor, maxCreditor, maxCredit})
+                delete(scores, maxCreditor)
+                scores[maxDebtor] += maxCredit
+            """
+            
+            return greedy(updated_scores, new_debt_array)
+
+        return greedy(transactions, debts)
+
+
+def scores(transactions):
+    scores = defaultdict(int)
+
+    for f, t, a in transactions:
+        scores[f] -= a
+        scores[t] += a
+
+    return scores
+
+"""
+def maxEntry(m):
+	# find first element
+	for i = range m: 
+		index = i
+		value = m[index]
+		break
+	
+	# obtain max element
+	for x := range m :
+		if m[x] > value:
+			index, value = x, m[x]
+	return
+
+
+def minEntry(m) :
+	# find first element
+	for i := range m {
+		index = i
+		value = m[index]
+		break
+	}
+	# obtain min element
+	for x := range m {
+		if m[x] < value {
+			index, value = x, m[x]
+		}
+	}
+	return
+"""
 
 
 if __name__ == "__main__":

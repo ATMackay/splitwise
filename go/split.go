@@ -7,9 +7,7 @@ func simplifyDebts(transactions []transaction) (debts []transaction) {
 
 	scores := scores(transactions)
 
-	debts = greedy(scores, debts)
-
-	return
+	return greedy(scores, debts)
 }
 
 func greedy(scores map[int64]int64, existingDebts []transaction) (debts []transaction) {
