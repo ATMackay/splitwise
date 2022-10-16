@@ -49,8 +49,6 @@ class Solution:
 
             negative = negatives[0]
 
-            #print(f"negative[0] {negative}")
-
             count = math.inf
             for positive in positives:
 
@@ -72,6 +70,10 @@ class Solution:
             return count + 1
 
         return recurse(positives, negatives)
+
+    def greedy(self):
+        # TODO
+        return
 
 
 
