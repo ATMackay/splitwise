@@ -1,4 +1,4 @@
-package main
+package splitwise
 
 import (
 	"encoding/csv"
@@ -8,7 +8,10 @@ import (
 	"strconv"
 )
 
-func readFile(fileName string) []transaction {
+// ReadFile opens a target csv file 'fileName'
+// and reads the contents into a Transactions struct
+// will panic if the csv contains invalid inputs (see ../test_data for valid examples)
+func ReadFile(fileName string) Transactions {
 
 	// open file
 	f, err := os.Open(fileName)
@@ -20,7 +23,7 @@ func readFile(fileName string) []transaction {
 	defer f.Close()
 	reader := csv.NewReader(f)
 
-	var transactions []transaction
+	var transactions Transactions = Transactions{}
 
 	for {
 		records, err := reader.Read()
@@ -28,21 +31,21 @@ func readFile(fileName string) []transaction {
 			if err == io.EOF {
 				break
 			}
-			log.Fatal(err)
+			panic(err)
 		}
 		t, err := strconv.ParseInt(records[0], 10, 64)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 		f, err := strconv.ParseInt(records[1], 10, 64)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
 		a, err := strconv.ParseInt(records[2], 10, 64)
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
-		transactions = append(transactions, [3]int64{t, f, a})
+		transactions = Add(transactions, t, f, a)
 	}
 
 	return transactions
