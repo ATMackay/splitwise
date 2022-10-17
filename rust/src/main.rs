@@ -1,7 +1,4 @@
 fn main() {
-    println!("splitwise algorithm");
+    println!("splitwise algorithm written in Rust....TODO");
 }
 
-fn min_transfers(transfers:&mut [i32;[i32;3]]) -> i32{
-
-}

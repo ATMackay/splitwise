@@ -5,14 +5,17 @@ import numpy
 from numpy.random import seed
 from numpy.random import randint
 from numpy import *
+import datetime
+import time
 
 
 
 # seed random number generator
-seed(2500)
+ms = datetime.datetime.now()
+seed(int64(time.mktime(ms.timetuple())))
 
-payments = 1000
-players = 21
+payments = 10
+players = 4
 max_payable = 100
 
 counter = 0
