@@ -12,7 +12,7 @@ Debt simplification algorithm written in Python, Go and Rust
 ```
 ## Python
 ```
-./go.sh
+./python.sh
 ```
 ## Rust TODO
 ```

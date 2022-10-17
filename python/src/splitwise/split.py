@@ -1,16 +1,17 @@
 from collections import defaultdict
 from array import *
 import numpy as np
-import math
 import time
 """
-This programme takes an input file containing trading data, calculates the implied volatility for each 
-trade and ouputs a new csv file.
+This programme takes an input file containing transactions between nodes in a graph,
+calculates the total balances, simplifies the debts and prints out the minimum transactions
+required to settle those debts.
 
-Requirements: Python 3.6 (or later), numpy, pandas, scipy
+For examples of valid input csv files see ../../../test_data
 
+Requirements: Python 3.6 (or later), numpy
 
-Installation of NumPy, SciPy and Pandas using pip --> $ python3 -m pip install --user numpy scipy pandas
+Install NumPy using pip --> $ python3 -m pip install --user numpy 
 """
 
 
@@ -75,7 +76,11 @@ def min_entry(m):
 			index, value = x, m[x]
 	return index, value
 
-
+def is_zero_sum(scores):
+    v = 0
+    for i in scores:
+        v += scores[i]
+    return v == 0
 
 """
 Solution
@@ -93,6 +98,8 @@ class Solution:
 
     def simplify_debts(self, transactions):
         balances = scores(transactions)
+        if is_zero_sum(balances) != True:
+            raise Exception("invalid scores, must be zero sum")
         debts = list()
         return greedy(balances, debts)
 
