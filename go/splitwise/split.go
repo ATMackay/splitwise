@@ -1,8 +1,7 @@
 package splitwise
 
 // SimplifyDebts takes a slice of transactions between parties and
-// returns the minimum number of payments between parties necessary
-// to settle the outstanding debts
+// returns the minimum number of payments necessary to settle the outstanding debts
 func SimplifyDebts(transactions Transactions) (simplifiedDebts Transactions) {
 
 	// compute total balances
