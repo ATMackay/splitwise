@@ -14,8 +14,8 @@ import time
 ms = datetime.datetime.now()
 seed(int64(time.mktime(ms.timetuple())))
 
-payments = 10
-players = 4
+payments = 100
+players = 20
 max_payable = 100
 
 counter = 0
