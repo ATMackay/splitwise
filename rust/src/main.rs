@@ -73,7 +73,6 @@ fn scores(txs: Vec<Transaction>) -> HashMap<i32,i32> {
 
     let mut scores = HashMap::<i32, i32>::new();
 
-    // FIXME inefficient method requiring 2 for loops, please fix 
 	for tx in txs.iter() {
 		if tx.sender == tx.receiver {
 			continue

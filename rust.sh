@@ -1,2 +1,2 @@
 cd rust
-cargo run
+cargo run --release

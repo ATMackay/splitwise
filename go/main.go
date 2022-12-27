@@ -15,12 +15,12 @@ func main() {
 	start := time.Now()
 	// Read csv file
 	transactions := splitwise.ReadFile("../test_data/input.csv")
-	fmt.Printf("completed csv load execution in %v microseconds\n", time.Since(start).Microseconds())
+	fmt.Printf("completed csv load execution in %v\n", time.Since(start))
 
 	restart := time.Now()
 	// Simplify debts
 	txs := splitwise.SimplifyDebts(transactions)
-	fmt.Printf("completed SimplifyDebts execution in %v microseconds, settlement transactions %v\n", time.Since(restart).Microseconds(), len(txs))
+	fmt.Printf("completed SimplifyDebts execution in %v, settlement transactions %v\n", time.Since(restart), len(txs))
 
 	fmt.Printf("transactions: %v\n", txs)
 }
