@@ -89,7 +89,7 @@ fn scores(txs: Vec<Transaction>) -> HashMap<i32,i32> {
         }
 	}
 
-	return scores
+	scores
 }
 
 fn is_zero_sum(scores: &HashMap<i32,i32>) -> bool {
@@ -97,7 +97,7 @@ fn is_zero_sum(scores: &HashMap<i32,i32>) -> bool {
     for (_key, value) in scores {
         v += value
     }
-    return v == 0
+    v == 0
 }
 
 // greedy is a recursive algorithm that simplifies debts
@@ -156,7 +156,7 @@ fn greedy<'a>(scores: &'a mut HashMap<i32,i32>, txs: &'a mut Vec<Transaction>) -
         scores.insert(max_debtor, new_r);
 	}
 
-    return greedy(scores, txs)
+    greedy(scores, txs)
 }
 
 fn max_entry(scores: &HashMap<i32,i32>) -> (i32, i32) {
@@ -175,7 +175,7 @@ fn max_entry(scores: &HashMap<i32,i32>) -> (i32, i32) {
             value = *v;
 		}
 	}
-    return (index, value)
+    (index, value)
 }
 
 fn min_entry(scores: &HashMap<i32,i32>) -> (i32,i32) {
@@ -194,7 +194,7 @@ fn min_entry(scores: &HashMap<i32,i32>) -> (i32,i32) {
             value = *v;
 		}
 	} 
-    return (index, value)
+    (index, value)
 }
 
 fn simplify_debts(txs: Vec<Transaction>) -> Vec<Transaction> {
@@ -233,9 +233,6 @@ fn main() {
     println!("completed simplify_debts execution in {:.2?}, settlement transactions {}", finish, debts.len());
 
 
-    println!("simplified debts");
-    for tx in debts.iter() {
-        println!("{:?}", tx);
-	}
+    println!("simplified debts {:?}", debts);
 }
 
