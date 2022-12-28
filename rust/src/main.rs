@@ -41,18 +41,12 @@ fn read_file(txs: &mut Vec<Transaction>, filename: String) -> Result<(), Error> 
 // transaction
 #[derive(Debug)]
 #[derive(Clone)]
-struct Transaction {
-    sender: i32,
-    receiver: i32,
-    amount: i32,
-}
+struct Transaction(i32, i32, i32);
 
 fn add(txs: &mut Vec<Transaction>, s: i32, r: i32, amt: i32) {
-    let new_tx = Transaction{
-        sender: s,
-        receiver: r,
-        amount: amt,
-    };
+    
+    let new_tx = Transaction(s, r, amt);
+
     txs.push(new_tx);
 }
 
@@ -74,18 +68,18 @@ fn scores(txs: Vec<Transaction>) -> HashMap<i32,i32> {
     let mut scores = HashMap::<i32, i32>::new();
 
 	for tx in txs.iter() {
-		if tx.sender == tx.receiver {
+		if tx.0 == tx.1 {
 			continue
 		}
         {
-            let p = scores.entry(tx.sender).or_insert(0);
-            let new_p = *p - tx.amount;
-            scores.insert(tx.sender, new_p);
+            let p = scores.entry(tx.0).or_insert(0);
+            let new_p = *p - tx.2;
+            scores.insert(tx.0, new_p);
         }
         {
-            let r = scores.entry(tx.receiver).or_insert(0);
-            let new_r = *r + tx.amount;
-            scores.insert(tx.receiver, new_r);
+            let r = scores.entry(tx.1).or_insert(0);
+            let new_r = *r + tx.2;
+            scores.insert(tx.1, new_r);
         }
 	}
 
