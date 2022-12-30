@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use csv::Reader;
 use csv::Error;
 use std::time::Instant;
+use std::cmp::Ordering;
 
 
 fn read_file(txs: &mut Vec<Transaction>, filename: String) -> Result<(), Error> {
@@ -13,7 +14,6 @@ fn read_file(txs: &mut Vec<Transaction>, filename: String) -> Result<(), Error> 
 
     let receiver: String = headers[1].to_string();
     let r: i32 = receiver.parse().unwrap();
-
 
     let amount: String = headers[2].to_string();
     let a: i32 = amount.parse().unwrap();
@@ -39,8 +39,7 @@ fn read_file(txs: &mut Vec<Transaction>, filename: String) -> Result<(), Error> 
 }
 
 // transaction
-#[derive(Debug)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct Transaction(i32, i32, i32);
 
 fn add(txs: &mut Vec<Transaction>, s: i32, r: i32, amt: i32) {
@@ -88,7 +87,7 @@ fn scores(txs: Vec<Transaction>) -> HashMap<i32,i32> {
 
 fn is_zero_sum(scores: &HashMap<i32,i32>) -> bool {
     let mut v = 0;
-    for (_key, value) in scores {
+    for value in scores.values() {
         v += value
     }
     v == 0
@@ -132,36 +131,36 @@ fn greedy<'a>(scores: &'a mut HashMap<i32,i32>, txs: &'a mut Vec<Transaction>) -
 
 	let (max_debtor, d) = min_entry(scores);
 
-	if c == -d {
-		add(txs, max_debtor, max_creditor, c);
-		scores.remove(&max_debtor);
-		scores.remove(&max_creditor);
-	} else if c > -d {
-        add(txs, max_debtor, max_creditor, -d);
-		scores.remove(&max_debtor);
-        let p = scores.entry(max_creditor).or_insert(0);
-        let new_p = *p + d;
-        scores.insert(max_creditor, new_p);
-	} else if c < -d {
-        add(txs, max_debtor, max_creditor, c);
-		scores.remove(&max_creditor);
-        let r = scores.entry(max_debtor).or_insert(0);
-        let new_r = *r + c;
-        scores.insert(max_debtor, new_r);
-	}
-
+    match c.cmp(&-d) {
+        Ordering::Equal => {
+            add(txs, max_debtor, max_creditor, c);
+            scores.remove(&max_debtor);
+            scores.remove(&max_creditor);
+        },
+        Ordering::Greater => {
+            add(txs, max_debtor, max_creditor, -d);
+            scores.remove(&max_debtor);
+            let p = scores.entry(max_creditor).or_insert(0);
+            let new_p = *p + d;
+            scores.insert(max_creditor, new_p);
+        },
+        Ordering::Less => {
+            add(txs, max_debtor, max_creditor, c);
+            scores.remove(&max_creditor);
+            let r = scores.entry(max_debtor).or_insert(0);
+            let new_r = *r + c;
+            scores.insert(max_debtor, new_r);
+        }
+    }
+    
     greedy(scores, txs)
 }
 
 fn max_entry(scores: &HashMap<i32,i32>) -> (i32, i32) {
 	// find first element
-    let mut index = 0;
-    let mut value = 0;
-    for (k, v) in scores {
-        index = *k;
-        value = *v;
-        break
-    }
+    let (k, v) = if let Some((k, v)) = scores.iter().next() { (k, v) } else { todo!() };
+    let mut index = *k;
+    let mut value = *v;
 	// obtain max element
     for (k, v) in scores {
 		if v > &value {
@@ -174,13 +173,9 @@ fn max_entry(scores: &HashMap<i32,i32>) -> (i32, i32) {
 
 fn min_entry(scores: &HashMap<i32,i32>) -> (i32,i32) {
 	// find first element
-    let mut index = 0;
-    let mut value = 0;
-    for (k, v) in scores {
-        index = *k;
-        value = *v;
-        break
-    }
+    let (k, v) = if let Some((k, v)) = scores.iter().next() { (k, v) } else { todo!() };
+    let mut index = *k;
+    let mut value = *v;
 	// obtain max element
     for (k, v) in scores {
 		if v < &value {
@@ -203,7 +198,7 @@ fn simplify_debts(txs: Vec<Transaction>) -> Vec<Transaction> {
     let mut d_0 = vec![];
     let debts = greedy(&mut s, &mut d_0);
 
-    return debts.to_vec()
+    debts.to_vec()
 }
 
 // splitwise
